@@ -1,17 +1,11 @@
 # https://www.interviewbit.com/problems/grid-unique-paths/
 
+from math import factorial
+
 def uniquePaths(A, B):
     A -= 1
     B -= 1
     
-    def factorial(n):
-        fact = 1
-        
-        for i in range(2, n+1):
-            fact *= i
-            
-        return fact
-        
     return factorial(A+B) // (factorial(A) * factorial(B))
 
 
