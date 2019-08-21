@@ -56,7 +56,7 @@ func findAnagrams(s string, p string) []int {
 		}
 
 		sCounter[string(lastChar)]++
-		if isAnagram(sCounter, pCounter) {
+		if prevChar == "" && isAnagram(sCounter, pCounter) {
 			result = append(result, i)
 			prevChar = string(s[i])
 		} else {
