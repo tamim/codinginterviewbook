@@ -6,9 +6,12 @@ def fourSum(nums, target):
         for j in range(i+1, n):
             pairs.append((nums[i]+nums[j], i, j))
 
-    print(pairs)        
     pairs.sort()
-    print(pairs)
+    
+    n = len(pairs)
+    i, j = 0, n-1
+
+    while 
     
     
 if __name__ == "__main__":
