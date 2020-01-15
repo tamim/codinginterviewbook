@@ -5,9 +5,6 @@ import (
 	"strings"
 )
 
-// https://leetcode.com/problems/shortest-palindrome/
-// https://www.interviewbit.com/problems/minimum-characters-required-to-make-a-string-palindromic/
-
 func minCharsToPalindrome(s string) int {
 	l := len(s)
 	if l == 1 {

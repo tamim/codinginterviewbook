@@ -46,6 +46,8 @@ def hotel(arrive, depart, K):
 """
 Inefficent solution (why? ask yourself.)
 """
+from collections import defaultdict
+
 def hotel(arrive, depart, K):
     days = defaultdict(int)
     

@@ -50,39 +50,12 @@ int main()
     int n = 8;
     int key, result;
 
-    key = 0;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
+    int keys[] = {0, 10, 4, 3, 6, 1, 2, 5, 7};
+    int i, key_count = 9;
 
-    key = 10;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
-
-    key = 4;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
-
-    key = 3;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
-
-    key = 6;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
-
-    key = 1;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
-
-    key = 2;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
-
-    key = 5;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
-
-    key = 7;
-    result = binary_search(ara, n, key);
-    printf("key = %d, pos = %d\n", key, result);
+    for (i = 0; i < key_count; i++) {
+        key = keys[i];
+        result = binary_search(ara, n, key);
+        printf("key = %d, pos = %d\n", key, result);
+    }
 }

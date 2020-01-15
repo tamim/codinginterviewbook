@@ -2,17 +2,6 @@ package main
 
 import "fmt"
 
-func main() {
-	A := []int{4, 5, 7, 9, 1, 3, 8, 20, 18}
-	fmt.Println(subUnsort(A))
-
-	A = []int{4, 5, 7, 9, 1, 3, 8, 10, 18}
-	fmt.Println(subUnsort(A))
-
-	A = []int{4, 5, 7, 9, 1, 3, 8, 20, 18, 22, 23}
-	fmt.Println(subUnsort(A))
-}
-
 func subUnsort(A []int) []int {
 	var min, max, start, end, i, n int
 
@@ -63,4 +52,15 @@ func subUnsort(A []int) []int {
 	}
 
 	return []int{start, end}
+}
+
+func main() {
+	A := []int{4, 5, 7, 9, 1, 3, 8, 20, 18}
+	fmt.Println(subUnsort(A))
+
+	A = []int{4, 5, 7, 9, 1, 3, 8, 10, 18}
+	fmt.Println(subUnsort(A))
+
+	A = []int{4, 5, 7, 9, 1, 3, 8, 20, 18, 22, 23}
+	fmt.Println(subUnsort(A))
 }

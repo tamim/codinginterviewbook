@@ -1,0 +1,2770 @@
+Remove Duplicates From Array
+
+def remove_duplicates(nums):
+    n = len(nums)
+    
+    current_index = 1
+    for i in range(1, n):
+        if nums[i] != nums[i-1]:
+            nums[current_index] = nums[i]
+            current_index += 1
+
+    return current_index
+
+
+	
+if __name__ == "__main__":
+    nums = [1, 1, 1, 2, 3, 3, 4, 4, 4, 5, 6, 6, 7]
+    l = remove_duplicates(nums)
+    print(nums[:l])
+
+
+
+Spiral Order Matrix
+
+package main
+
+import "fmt"
+
+func spiralOrder(A [][]int) []int {
+	m := len(A)
+	if m == 0 {
+		return []int{}
+	}
+	n := len(A[0])
+
+	result := make([]int, m*n)
+	indx := 0
+
+	left := 0
+	right := n - 1
+	top := 0
+	bottom := m - 1
+
+	direction := 0
+
+	var i int
+
+	for top <= bottom && left <= right {
+		if direction == 0 {
+			for i = left; i <= right; i++ {
+				result[indx] = A[top][i]
+				indx++
+			}
+			top++
+		} else if direction == 1 {
+			for i = top; i <= bottom; i++ {
+				result[indx] = A[i][right]
+				indx++
+			}
+			right--
+		} else if direction == 2 {
+			for i = right; i >= left; i-- {
+				result[indx] = A[bottom][i]
+				indx++
+			}
+			bottom--
+		} else { // direction 3
+			for i = bottom; i >= top; i-- {
+				result[indx] = A[i][left]
+				indx++
+			}
+			left++
+		}
+
+		direction = (direction + 1) % 4
+	}
+
+	return result
+}
+
+func main() {
+	matrix := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+	result := spiralOrder(matrix)
+	fmt.Println(result)
+}
+
+
+Maximum Sum Contiguous Subarray
+
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+// O(n)
+func maxSubArray(A []int) int {
+	maxSum := math.MinInt32
+	currentSum := 0
+	n := len(A)
+	for i := 0; i < n; i++ {
+		currentSum += A[i]
+		if currentSum > maxSum {
+			maxSum = currentSum
+		}
+		if currentSum < 0 {
+			currentSum = 0
+		}
+	}
+
+	return maxSum
+}
+
+// O(n ^ 2)
+func maxSubArray2(A []int) int {
+	maxSum := math.MinInt32
+	currentSum := 0
+	n := len(A)
+
+	for i := 0; i < n; i++ {
+		if A[i] > maxSum {
+			maxSum = A[i]
+		}
+		currentSum = A[i]
+		for j := i + 1; j < n; j++ {
+			currentSum += A[j]
+			if currentSum > maxSum {
+				maxSum = currentSum
+			}
+		}
+	}
+
+	return maxSum
+}
+
+func main() {
+	fmt.Println(maxSubArray([]int{-2, 1, -3, 4, -1, 2, 1, -5, 4}))  // ans 6
+	fmt.Println(maxSubArray2([]int{-2, 1, -3, 4, -1, 2, 1, -5, 4})) // ans 6
+}
+
+
+Max Distance
+def maximum_gap(A):
+    numbers = []
+    for i, num in enumerate(A):
+        numbers.append((num, i))
+    numbers.sort()
+    
+    max_gap = 0
+    min_number = numbers[0][1]
+
+    for item in numbers:
+        num = item[1]
+        if num <= min_number:
+            min_number = num
+        else:
+            max_gap = max(max_gap, num - min_number)
+    return max_gap
+
+
+
+if __name__ == "__main__":
+    A = [3, 5, 4, 2]
+    print(maximum_gap(A))
+
+    A = [2, 3, 4, 5]
+    print(maximum_gap(A))
+
+    A = [5, 4, 3, 2]
+    print(maximum_gap(A)) 
+
+Hotel Bookings Possible
+"""
+Accepted solution
+"""
+def hotel(arrive, depart, K):
+    arrive.sort()
+    depart.sort()
+    
+    count = 0
+    n = len(arrive)
+    
+    i, j = 0, 0
+    while i < n and j < n:
+        if arrive[i] < depart[j]:
+            count += 1
+            if count > K:
+                return False
+            i += 1
+        else:
+            count -= 1
+            j += 1
+
+    return True
+
+
+"""
+Accepted and nicer looking solution (code)
+"""
+def hotel(arrive, depart, K):
+    events = [(t, 1) for t in arrive] + [(t, 0) for t in depart]
+    events.sort()
+
+    count = 0
+
+    for event in events:
+        if event[1] == 1:
+            count += 1
+        else:
+            count -= 1
+
+        if count > K:
+            return 0
+
+    return 1
+
+
+"""
+Inefficent solution (why? ask yourself.)
+"""
+from collections import defaultdict
+
+def hotel(arrive, depart, K):
+    days = defaultdict(int)
+    
+    for start, end in zip(arrive, depart):
+        for i in range(start, end):
+            days[i] += 1
+            if days[i] > K:
+                return False
+
+    return True
+
+
+Maximum Unsorted Subarray
+package main
+
+import "fmt"
+
+func subUnsort(A []int) []int {
+	var min, max, start, end, i, n int
+
+	n = len(A)
+
+	for i = 0; i < n-1; i++ {
+		if A[i] > A[i+1] {
+			break
+		}
+	}
+	if i == n-1 {
+		return []int{-1}
+	}
+
+	start = i
+
+	for i = n - 1; i > start; i-- {
+		if A[i] < A[start] || A[i] < A[i-1] {
+			break
+		}
+	}
+	end = i
+
+	min = A[start]
+	max = A[start]
+
+	for i = start; i <= end; i++ {
+		if A[i] < min {
+			min = A[i]
+		}
+		if A[i] > max {
+			max = A[i]
+		}
+	}
+
+	for i = 0; i < start; i++ {
+		if A[i] > min {
+			start = i
+			break
+		}
+	}
+
+	for i = n - 1; i > end; i-- {
+		if A[i] < max {
+			end = i
+			break
+		}
+	}
+
+	return []int{start, end}
+}
+
+func main() {
+	A := []int{4, 5, 7, 9, 1, 3, 8, 20, 18}
+	fmt.Println(subUnsort(A))
+
+	A = []int{4, 5, 7, 9, 1, 3, 8, 10, 18}
+	fmt.Println(subUnsort(A))
+
+	A = []int{4, 5, 7, 9, 1, 3, 8, 20, 18, 22, 23}
+	fmt.Println(subUnsort(A))
+}
+
+
+Merge Overlapping Intervals
+def merge(intervals):
+    intervals.sort()
+    n = len(intervals)
+    new_intervals = []
+    new_intervals.append(intervals[0])
+    for i in range(1, n):
+        start, end = new_intervals[-1]
+        if intervals[i][0] > end:
+            new_intervals.append(intervals[i])
+        elif intervals[i][1] > end:
+            end = intervals[i][1]
+            new_intervals[-1] = (start, end)
+
+            
+    return new_intervals
+    
+if __name__ == "__main__":
+    intervals = [ (1, 10), (2, 9), (3, 8), (4, 7), (5, 6), (6, 6) ]
+    print(merge(intervals))    
+
+Merge Intervals
+
+def insert(intervals, new_interval):
+    n = len(intervals)
+    
+    start, end = 0, 0
+    while end < n:
+        if new_interval[0] <= intervals[end][1]:
+            if new_interval[1] < intervals[end][0]:
+                break
+            new_interval[0] = min(new_interval[0], intervals[end][0])
+            new_interval[1] = max(new_interval[1], intervals[end][1])
+        else:
+            start += 1
+        end += 1
+    return intervals[:start] + [new_interval] + intervals[end:]
+
+
+
+Grid Paths
+from math import factorial
+
+def uniquePaths(A, B):
+    A -= 1
+    B -= 1
+    
+    return factorial(A+B) // (factorial(A) * factorial(B))
+
+
+if __name__ == "__main__":
+    A, B = 3, 3
+    print(uniquePaths(3, 3))
+
+C Solution 
+
+int uniquePaths(int a, int b) {
+    int t, i, j, n;
+    double result;
+    
+    a -= 1;
+    b -= 1;
+    
+    // we shall calculate (A+1)*(A+2)*(A+3) .. *n / factorial(B)
+    
+    // make sure that A > B
+    if (b > a) {
+        t = a;
+        a = b;
+        b = t;
+    }
+    
+    result = 1;
+    
+    n = a + b;
+    for(i = a + 1, j = 2; i <= n; i++) {
+        if (j <= b) {
+            result = result * (i * 1.0 / j);
+            j++;
+        }
+        else {
+            result = result * i;
+        }
+    }
+    
+    for(; j <= b; j++) {
+        result = result / j;
+    }
+    
+    return (unsigned int)(result + 0.0000000001);
+}
+
+Array Search
+#include <stdio.h>
+
+int binary_search(int ara[], int n, int key)
+{
+    int left, right, mid;
+    
+    if (n == 0) {
+        return 0;
+    }   
+
+    left = 0;
+    right = n - 1;
+
+    while (left <= right) {
+        if (key < ara[left]) {
+            return left;
+        }
+        if (key > ara[right]) {
+            return right+1;
+        }
+
+        mid = left + (right - left) / 2;
+        //printf("l = %d, r = %d, mid = %d, ara[mid] = %d\n", left, right, mid, ara[mid]);
+        if (key == ara[mid]) {
+            if (mid == left || ara[mid-1] != key) {
+                return mid;
+            }
+            right = mid;
+        }
+        else if (key < ara[mid]) {
+            if (mid > left && key > ara[mid-1]) {
+                return mid;
+            }
+            right = mid - 1;
+        }
+        else {
+            if (mid < right && key < ara[mid+1]) {
+                return mid+1;
+            }
+            left = mid + 1;
+        }
+    }
+
+    return -1;
+}
+
+int main() 
+{
+    int ara[] = {1, 2, 4, 4, 4, 5, 7, 7};
+    int n = 8;
+    int key, result;
+
+    int keys[] = {0, 10, 4, 3, 6, 1, 2, 5, 7};
+    int i, key_count = 9;
+
+    for (i = 0; i < key_count; i++) {
+        key = keys[i];
+        result = binary_search(ara, n, key);
+        printf("key = %d, pos = %d\n", key, result);
+    }
+}
+
+Search For A Range
+// 
+
+Rotated Array Search
+
+def search(A, key):
+    left, right = 0, len(A) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if A[mid] == key:
+            return mid
+        if A[left] < A[mid] and key < A[mid] and key >= A[left]:
+            right = mid - 1
+        elif A[mid] < A[right] and key > A[mid] and key <= A[right]:
+            left = mid + 1
+        elif A[left] > A[mid]:
+            right = mid - 1
+        else:
+            left = mid + 1
+            
+    return -1
+
+Square Root
+
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+func sqrtN(n float64) float64 {
+	delta := float64(0.00000001)
+
+	left := float64(0.0)
+	right := n
+
+	var mid, m, diff float64
+
+	for left < right {
+		mid = (left + right) / 2.0
+
+		m = mid * mid
+		diff = math.Abs(m - n)
+		if diff < delta {
+			return mid
+		}
+
+		if m > n {
+			right = mid
+		} else {
+			left = mid
+		}
+	}
+
+	return mid
+}
+
+func main() {
+	var n int64
+
+	n = 9
+
+	if n < 0 {
+		fmt.Println("The number can't be negative")
+	} else {
+		root := sqrtN(float64(n))
+		fmt.Println(root)
+	}
+}
+
+
+Power Function
+
+//
+
+String Compression
+
+package main
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
+func main() {
+	input := "abbcccddddeeabbc"
+	n := len(input)
+
+	letters := make([]byte, 0, n)
+	frequency := make([]int, 0, n)
+
+	freq := 0
+	for i := 0; i < n; i++ {
+		freq++
+		if i == n-1 || input[i] != input[i+1] {
+			letters = append(letters, input[i])
+			frequency = append(frequency, freq)
+			freq = 0
+		}
+	}
+
+	n = len(letters)
+	output := make([]string, 0, n*2)
+	for i := 0; i < n; i++ {
+		output = append(output, string(letters[i]))
+		output = append(output, strconv.Itoa(frequency[i]))
+	}
+
+	outputStr := strings.Join(output, "")
+
+	fmt.Println(outputStr)
+
+}
+
+
+StrStr
+
+def calculate_hash(base, s):
+    hash_value = 0
+    n = len(s)
+    for i in range(n):
+        hash_value += ord(s[i]) * (base ** (n-1-i))
+
+    return hash_value   
+
+def contains(s, substr):
+    # base should be a prime number, 
+    # you can use other primes (larger than 256)
+    base = 257 
+
+    substr_value = calculate_hash(base, substr)
+    
+    m = len(substr)
+
+    hash_value = calculate_hash(base, s[:m])
+    if substr_value == hash_value:
+        if s[:m] == substr: # check to avoid collision
+            return True
+
+    power = base ** (m - 1)
+
+    n = len(s)
+    for i in range(m, n):
+        hash_value -= ord(s[i-m]) * power
+        hash_value *= base
+        hash_value += ord(s[i])
+        
+        if substr_value == hash_value:
+            if s[i-m+1:i+1] == substr:
+                return True
+
+    return False
+
+
+if __name__ == "__main__":
+    s = "this is a test."
+    substr = "test"
+
+    if contains(s, substr):
+        print(substr, "is present in", s)
+    else:
+        print(substr, "not found in", s)
+
+    s = "this is a test."
+    substr = "thisis"
+
+    if contains(s, substr):
+        print(substr, "is present in", s)
+    else:
+        print(substr, "not found in", s)
+
+String Rotation
+
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func isRotation(s1, s2 string) bool {
+	s := s1 + s1
+	if len(s1) == len(s2) && strings.Contains(s, s2) {
+		return true
+	}
+	return false
+}
+
+func main() {
+	s1 := "Bangladesh"
+	s2 := "Bangla"
+	s3 := "Bangladesi"
+	s4 := "deshBangla"
+
+	fmt.Println(s1, s2, isRotation(s1, s2))
+	fmt.Println(s1, s3, isRotation(s1, s3))
+	fmt.Println(s1, s4, isRotation(s1, s4))
+}
+
+
+Reverse String
+
+
+
+Add Binary Strings
+
+
+
+Power of 2
+
+def power_of_2(number):
+    if number == "1":
+        return True
+    if number == "0" or number[0] == "-":
+        return False
+        
+    al = [int(i) for i in number]  
+
+    while True:
+        ans = []
+        carry = 0
+        nonzero = 0
+        for n in al:
+            d = (n + carry * 10) // 2
+            if d:
+                nonzero = 1
+            if nonzero:
+                ans.append(d)
+            carry = (n + carry * 10) % 2 
+            
+        if carry and ans == []:
+            return True
+        elif carry:
+            return False
+        al = ans
+
+
+if __name__ == "__main__":
+    t = int(input())
+    for _ in range(t):
+        number = input()
+        if power_of_2(number):
+            print("It's a power of 2")
+        else:
+            print("Not a power of 2")
+
+
+Valid Number
+
+def is_valid_number(num):
+    num = num.strip()
+    
+    if len(num) == 0:
+        return 0
+    
+    i, len_num = 0, len(num)
+    if num[0] == '+' or num[0] == '-':
+        i += 1
+    
+    gotExp = False
+    gotDecimal = False
+    gotSignAfterExp = False
+        
+    while i < len_num:
+        if num[i] in "0123456789":
+            i += 1
+            continue
+        if num[i] == '.':
+            if gotDecimal or gotExp:
+                return 0
+            if i + 1 < len_num and num[i+1] in "0987654321":
+                i += 1
+                gotDecimal = True
+            else:
+                return 0
+        elif num[i] == 'e' or num[i] == 'E':
+            if gotExp or i == len_num - 1:
+                return 0
+            gotExp = True
+        elif num[i] in "+-":
+            if gotSignAfterExp:
+                return 0
+            if gotExp:
+                gotSignAfterExp = True
+                if i == len_num - 1:
+                    return 0
+            else:
+                return 0
+        else:
+            return 0
+            
+        i += 1
+        
+    if i == len_num and num[i-1] in "0987654321":
+        return 1
+    else:
+        return 0
+
+
+# Using regular expression, in go
+
+package main
+
+import (
+	"fmt"
+	"regexp"
+	"strings"
+)
+
+func isNumber(num string) bool {
+	num = strings.TrimSpace(num)
+
+	var (
+		r1 = regexp.MustCompile(`^[-+]?\d+$`)
+		r2 = regexp.MustCompile(`^[-+]?(\d+)?\.\d+$`)
+		r3 = regexp.MustCompile(`^[-+]?\d+(\.\d+)?e[-+]?\d+$`)
+	)
+
+	if r1.MatchString(num) || r2.MatchString(num) || r3.MatchString(num) {
+		return true
+	}
+
+	return false
+}
+
+func main() {
+	input := []string{
+		"123 ",
+		" 0123",
+		"-1.32",
+		"+54",
+		"10e2",
+		"1.0e2",
+		"1e-10",
+	}
+
+	for _, number := range input {
+		fmt.Println(number, isNumber(number))
+	}
+}
+
+
+Palindrome
+
+def is_palindrome1(s):
+    return s == s[::-1]
+    
+def is_palindrome2(s):
+    l = len(s)
+    indx1 = l // 2 - 1
+    indx2 = (l + 1) // 2
+    while indx1 >= 0 and indx2 < l:
+        if s[indx1] != s[indx2]:
+            return False
+        indx1, indx2 = indx1 - 1, indx2 + 1
+
+    return True
+
+
+Shortest Palindrome
+
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func minCharsToPalindrome(s string) int {
+	l := len(s)
+	if l == 1 {
+		return 0
+	}
+
+	// check if it's arleady a palindrome
+	i := 0
+	j := l - 1
+	for ; i < j; i++ {
+		if s[i] != s[j] {
+			break
+		}
+		j--
+	}
+	if i >= j {
+		return 0 // palindrome
+	}
+
+	for m := int((l-1)/2) - 1; m >= 0; m-- {
+		for r := m + 2; r >= m+1; r-- {
+			i := m
+			j := r
+			for ; i >= 0; i-- {
+				if s[i] != s[j] {
+					break
+				}
+				j++
+			}
+			if i < 0 {
+				return (l - j)
+			}
+		}
+	}
+
+	return l - 1
+}
+
+func shortestPalindrome(s string) string {
+	n := minCharsToPalindrome(s)
+	if n == 0 {
+		return s
+	}
+	l := len(s)
+	p := make([]string, 0, n+l)
+
+	i := 0
+	for j := l - 1; i < n; i++ {
+		p = append(p, string(s[j]))
+		j--
+	}
+
+	for j := 0; j < l; j++ {
+		p = append(p, string(s[j]))
+	}
+
+	return strings.Join(p, "")
+}
+
+func shortestPalindrome2(s string) string {
+	n := minCharsToPalindrome(s)
+	if n == 0 {
+		return s
+	}
+	l := len(s)
+	p := make([]byte, 0, n+l)
+
+	i := 0
+	for j := l - 1; i < n; i++ {
+		p = append(p, s[j])
+		j--
+	}
+
+	for j := 0; j < l; j++ {
+		p = append(p, s[j])
+	}
+
+	return string(p)
+}
+
+func main() {
+	s := "abcba"
+	fmt.Println(s, shortestPalindrome2(s))
+
+	s = "abba"
+	fmt.Println(s, shortestPalindrome2(s))
+
+	s = "abbb"
+	fmt.Println(s, shortestPalindrome2(s))
+
+	s = "abbac"
+	fmt.Println(s, shortestPalindrome2(s))
+
+	s = "AACECAAAA"
+	fmt.Println(s, shortestPalindrome2(s))
+}
+
+
+Valid Anagram
+
+package main
+
+import (
+	"fmt"
+	"sort"
+	"strings"
+)
+
+func sortString1(s string) string {
+	a := strings.Split(s, "")
+	sort.Strings(a)
+	return strings.Join(a, "")
+}
+
+type sortRunes []rune
+
+func (s sortRunes) Less(i, j int) bool {
+	return s[i] < s[j]
+}
+
+func (s sortRunes) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func (s sortRunes) Len() int {
+	return len(s)
+}
+
+func sortString2(s string) string {
+	r := []rune(s)
+	sort.Sort(sortRunes(r))
+	return string(r)
+}
+
+func isAnagram(s string, t string) bool {
+	s = sortString1(s)
+	t = sortString1(t)
+
+	return s == t
+}
+
+func isAnagram2(s string, t string) bool {
+	sLen, tLen := len(s), len(t)
+	if sLen != tLen {
+		return false
+	}
+
+	sCounter := make(map[rune]int)
+	for _, c := range s {
+		sCounter[c]++
+	}
+
+	tCounter := make(map[rune]int)
+	for _, c := range t {
+		tCounter[c]++
+	}
+
+	for k, v := range sCounter {
+		v2, ok := tCounter[k]
+		if !ok || v != v2 {
+			return false
+		}
+	}
+
+	return true
+}
+
+func main() {
+	s := "anagram"
+	t := "gramama"
+
+	fmt.Println(isAnagram2(s, t))
+}
+
+
+All Anagrams in a String
+
+package main
+
+import (
+	"fmt"
+)
+
+func isAnagram(counter1, counter2 map[string]int) bool {
+	for k, v2 := range counter2 {
+		v1, ok := counter1[k]
+		if ok {
+			if v1 != v2 {
+				return false
+			}
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
+func findAnagrams(s string, p string) []int {
+	n, m := len(s), len(p)
+	if n < m {
+		return []int{}
+	}
+
+	pCounter := make(map[string]int)
+	for _, c := range p {
+		pCounter[string(c)]++
+	}
+
+	sCounter := make(map[string]int)
+	for _, c := range s[:m] {
+		sCounter[string(c)]++
+	}
+
+	result := make([]int, 0)
+
+	var prevChar, lastChar string
+	if isAnagram(sCounter, pCounter) {
+		result = append(result, 0)
+		prevChar = string(s[0])
+	}
+
+	sCounter[string(s[0])]--
+
+	for i := 1; i <= n-m; i++ {
+		lastChar = string(s[i+m-1])
+
+		if prevChar == lastChar {
+			result = append(result, i)
+			prevChar = string(s[i])
+			sCounter[lastChar]++
+			sCounter[prevChar]--
+			continue
+		}
+
+		sCounter[string(lastChar)]++
+		if prevChar == "" && isAnagram(sCounter, pCounter) {
+			result = append(result, i)
+			prevChar = string(s[i])
+		} else {
+			prevChar = ""
+		}
+
+		sCounter[string(s[i])]--
+
+	}
+
+	return result
+
+}
+
+func main() {
+	s := "abababbbb"
+	p := "ab"
+
+	fmt.Println(findAnagrams(s, p))
+}
+
+
+Reverse Linked List
+
+package main
+
+import "fmt"
+
+type listNode struct {
+	value int
+	next  *listNode
+}
+
+func listNodeNew(val int) *listNode {
+	var node *listNode = new(listNode)
+	node.value = val
+	node.next = nil
+	return node
+}
+
+func reverseListRecurse(node *listNode) *listNode {
+	if node.next == nil {
+		return node
+	}
+	nextNode := node.next
+	head := reverseListRecurse(nextNode)
+	node.next = nil
+	nextNode.next = node
+
+	return head
+}
+
+func reverseList(head *listNode) *listNode {
+	nodeStack := []*listNode{}
+
+	node := head
+
+	for node != nil {
+		nodeStack = append(nodeStack, node)
+		node = node.next
+	}
+
+	for i := len(nodeStack) - 1; i > 0; i-- {
+		nodeStack[i].next = nodeStack[i-1]
+	}
+
+	nodeStack[0].next = nil
+
+	return nodeStack[len(nodeStack)-1]
+}
+
+func reverseList2(head *listNode) *listNode {
+	prevNode := head
+	node := head.next
+	prevNode.next = nil
+	for node != nil {
+		//fmt.Println(prevNode.value, node.value)
+		nextNode := node.next
+		node.next = prevNode
+		prevNode = node
+		node = nextNode
+	}
+
+	head = prevNode
+
+	return head
+}
+
+func reverseListMN(head *listNode, m int, n int) *listNode {
+	node := head
+	var prev *listNode
+
+	for i := 1; i < m; i++ {
+		prev = node
+		node = node.next
+	}
+
+	startNode := node
+	prevNode := node
+	node = node.next
+	for i := m; i < n; i++ {
+		nextNode := node.next
+		node.next = prevNode
+		prevNode = node
+		node = nextNode
+	}
+
+	prev.next = prevNode
+	startNode.next = node
+
+	return head
+}
+
+func printList(head *listNode) {
+	for head != nil {
+		fmt.Println(head.value)
+		head = head.next
+	}
+}
+
+func main() {
+	node1 := listNodeNew(1)
+	node2 := listNodeNew(2)
+	node3 := listNodeNew(3)
+	node4 := listNodeNew(4)
+	node5 := listNodeNew(5)
+
+	head := node1
+	node1.next = node2
+	node2.next = node3
+	node3.next = node4
+	node4.next = node5
+
+	head = reverseListMN(head, 2, 4)
+	printList(head)
+}
+
+Remove Duplicates from List
+
+package main
+
+import "fmt"
+
+type listNode struct {
+	value int
+	next  *listNode
+}
+
+func listNodeNew(val int) *listNode {
+	var node *listNode = new(listNode)
+	node.value = val
+	node.next = nil
+	return node
+}
+
+func printList(head *listNode) {
+	for head != nil {
+		fmt.Println(head.value)
+		head = head.next
+	}
+}
+
+func removeDuplicates(head *listNode) *listNode {
+	counter := make(map[int]int)
+
+	node := head
+	previousNode := head
+	previousNode.next = nil
+	counter[node.value] = 1
+	for node.next != nil {
+		node = node.next
+		if _, ok := counter[node.value]; ok {
+			node = node.next
+			if node == nil {
+				break
+			}
+		}
+		counter[node.value] = 1
+		previousNode.next = node
+		previousNode = node
+	}
+
+	return head
+}
+
+func removeDuplicates2(head *listNode) *listNode {
+	currentNode := head
+
+	for currentNode != nil {
+		node := currentNode
+		for node.next != nil {
+			if node.next.value == currentNode.value {
+				node.next = node.next.next
+			} else {
+				node = node.next
+			}
+		}
+		currentNode = currentNode.next
+	}
+
+	return head
+}
+
+func main() {
+	node1 := listNodeNew(1)
+	node2 := listNodeNew(2)
+	node3 := listNodeNew(1)
+	node4 := listNodeNew(4)
+	node5 := listNodeNew(2)
+
+	head := node1
+	node1.next = node2
+	node2.next = node3
+	node3.next = node4
+	node4.next = node5
+
+	head = removeDuplicates2(head)
+
+	printList(head)
+}
+
+
+Remove Duplicates from Sorted List
+
+Remove Duplicates from Sorted List 2
+
+Delete Middle Node
+
+
+
+Remove N-th node from the list end
+
+Palindrome List
+
+Copy List
+
+class Node:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+        self.random = None
+
+def copy_list1(head):
+        if head == None:
+            return head
+
+        new_head = Node(head.val)
+        old_to_new = dict()
+        old_to_new[head] = new_head
+
+        node = head
+        while node.next:
+            node = node.next
+            new_node = Node(node.val)
+            old_to_new[node] = new_node
+
+        node = head
+        while node:
+            new_node = old_to_new[node]
+            new_node.next = old_to_new[node.next] if node.next else None
+            new_node.random = old_to_new[node.random] if node.random else None
+            node = node.next
+
+        return new_head
+
+def copy_list2(head):
+    if head == None:
+        return head
+
+    new_head = Node(head.val)
+    old_to_new = dict()
+    old_to_new[head] = new_head
+
+    node = head
+    while node.next:
+        node = node.next
+        new_node = Node(node.val)
+        old_to_new[node] = new_node
+
+    for node, new_node in old_to_new.items():
+        new_node.next = old_to_new[node.next] if node.next else None
+        new_node.random = old_to_new[node.random] if node.random else None
+
+    return new_head
+
+
+
+List Cycle Detection
+
+Two Sum
+
+def binary_search(ara, left, right, target):
+    if left > right:
+        return -1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if ara[mid] == target:
+            return mid
+        if ara[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return -1 # not found
+
+def two_sum_v1(numbers):
+    numbers.sort()
+    n = len(numbers)
+    for i in range(n-1):
+        target = 0 - numbers[i]
+        target_index = binary_search(numbers, i+1, n-1, target)
+        if target_index > i:
+            return numbers[i], numbers[target_index]
+
+def two_sum_v2(numbers):
+    found = dict()
+    for n in numbers:
+        m = 0 - n # or m = n * -1
+        try:
+            if found[m]:
+                return m, n
+        except KeyError:
+            found[n] = 1
+        
+def two_sum_v3(numbers):
+    numbers.sort()
+    n = len(numbers)
+    k = n - 1
+    for i in range(n-1):
+        for j in range(k, -1, -1):
+            if numbers[i] + numbers[j] == 0:
+                return numbers[i], numbers[j]
+            if numbers[i] + numbers[j] < 0:
+                k = j
+                break
+
+def two_sum_v4(numbers):
+    numbers.sort()
+    n = len(numbers)
+    i, j = 0, n-1
+    while i < j:
+        if numbers[i] + numbers[j] == 0:
+            return numbers[i], numbers[j]
+        if numbers[i] + numbers[j] < 0:
+            i += 1
+        else:
+            j -= 1
+
+
+if __name__ == "__main__":
+    numbers = [8, 3, 6, -1, -4, 4, 3, 9, -7]
+    print(two_sum_v1(numbers))
+    print(two_sum_v2(numbers))
+    print(two_sum_v3(numbers))
+    print(two_sum_v4(numbers))
+
+3 Sum
+
+
+
+4 Sum
+
+Difference K
+
+# Brute force solution, A is sorted
+def diff_possible1(A, k):
+    n = len(A)
+    i, j = 0, 1
+    while i < n - 1:
+        while j < n:
+            if A[j] - A[i] == k:
+                return True
+            if A[j] - A[i] > k:
+                break
+            j += 1
+        i += 1
+        if i == j:
+            j += 1
+                   
+    return False
+
+
+# O(n) solution, A is sorted
+def diff_possible2(A, k):
+    n = len(A)
+    i, j = 0, 1
+    while i < n - 1 and j < n:
+        if A[j] - A[i] == k and i != j:
+            return True
+        if A[j] - A[i] > k:
+            i += 1
+        else:
+            j += 1
+                
+    return False
+
+# O(n) solution, A is not sorted, space complexity also O(n)
+from collections import defaultdict
+
+def diff_possible3(A, k):
+    if k == 0:
+        if len(A) < 2:
+            return 0
+        
+    dd = defaultdict(int)
+    
+    for n in A:
+        dd[n] += 1
+        
+    for n in A:
+        dd[n] -= 1
+        x = k + n
+        if dd[x]:
+            return 1
+        dd[n] += 1
+            
+    return 0
+            
+
+
+Window String
+from collections import Counter, defaultdict
+
+def minWindow1(S, T):
+            
+    def contains(s, t):
+        for item in t:
+            if s[item] < t[item]:
+                return False
+        return True
+    
+    t_counter = defaultdict(int)
+    for c in T:
+        t_counter[c] += 1
+        
+    left, right, len_s = 0, 0, len(S)
+    min_left, min_right, min_len = -1, -1, len(S)+1
+    
+    s_counter = defaultdict(int)
+    while right < len_s:
+        while right < len_s:
+            s_counter[S[right]] += 1
+            if contains(s_counter, t_counter):
+                break
+            right += 1
+            
+        while left < right:
+            s_counter[S[left]] -= 1
+            if contains(s_counter, t_counter):
+                left += 1
+            else: # restore
+                s_counter[S[left]] += 1
+                break
+            
+        if contains(s_counter, t_counter) and (right - left < min_len):
+            min_len = right - left
+            min_left, min_right = left, right
+            
+        right += 1
+        
+    
+    return S[min_left:min_right+1] if min_len < float('inf') else ""
+                
+
+def minWindow2(S, T):
+    t_freq = Counter(T)
+    different_chars = len(t_freq)
+
+    s_freq = defaultdict(int)
+
+    len_s = len(S)
+    min_left, min_right, min_len = -1, -1, len_s+1
+
+    matched = 0
+
+    left = 0
+    for right in range(len_s):
+        ch_add = S[right]
+        s_freq[ch_add] += 1
+        if ch_add in t_freq and s_freq[ch_add] == t_freq[ch_add]:
+            matched += 1
+            
+        while matched == different_chars and left <= right:
+            ch_remove = S[left]
+            
+            if right - left + 1 < min_len:
+                min_len = right - left + 1
+                min_left, min_right = left, right
+                
+            s_freq[ch_remove] -= 1
+            if ch_remove in t_freq and s_freq[ch_remove] < t_freq[ch_remove]:
+                matched -= 1
+                
+            left += 1
+
+    if min_len == len_s+1:
+        return ""
+
+    return S[min_left:min_right+1]
+
+if __name__ == "__main__":
+    S, T = "ADOBECODEBANC", "ABC"
+    print(minWindow1(S, T))
+    print(minWindow2(S, T))
+
+Counting Triangles
+
+
+
+Points on the Straight Line
+
+
+
+Parenthesis Balance
+
+package main
+
+import "fmt"
+
+func isValid(A string) int {
+	stack := make([]string, len(A), len(A))
+	top := 0
+	for i := range A {
+		c := string(A[i])
+		if c == "(" || c == "{" || c == "[" {
+			stack[top] = c
+			top++
+		} else {
+			if top < 1 {
+				return 0
+			}
+			lastItem := stack[top-1]
+			top--
+			if (c == ")" && lastItem != "(") || (c == "}" && lastItem != "{") || (c == "]" && lastItem != "[") {
+				return 0
+			}
+		}
+	}
+
+	if top == 0 {
+		return 1
+	}
+
+	return 0
+}
+
+func main() {
+	fmt.Println(isValid(""), 1)
+	fmt.Println(isValid("()"), 1)
+	fmt.Println(isValid("()()(){}[]"), 1)
+	fmt.Println(isValid(")()()()"), 0)
+	fmt.Println(isValid("()(){]"), 0)
+	fmt.Println(isValid("((())"), 0)
+}
+
+
+Redundant Braces
+
+def is_redundant(expr):
+    stack = []
+
+    for item in expr:
+        if item in "(+-*/":
+            stack.append(item)
+        elif item in ")":
+            last_item = stack.pop()
+            if last_item == "(":
+                return True
+            while "(" != stack.pop():
+                continue
+    return False
+
+if __name__ == "__main__":
+    expr = "a + b"
+    print(expr, is_redundant(expr))
+
+    expr = "(a)"
+    print(expr, is_redundant(expr))
+
+    expr = "(a + b + c)"
+    print(expr, is_redundant(expr))
+
+
+    expr = "((a + b + c + d + e))"
+    print(expr, is_redundant(expr))
+
+Queue using Stacks
+
+
+
+Min Stack
+
+class MinStackOld:
+    stk = []
+    
+    def __init__(self):
+        self.stk = []
+        
+    def push(self, x):
+        min_item = x
+        if len(self.stk) > 0:
+            top_item, min_item = self.stk[-1]
+            
+        if x < min_item:
+            min_item = x
+        
+        self.stk.append((x, min_item))  
+
+    def pop(self):
+        if len(self.stk) > 0:
+            self.stk.pop()
+        
+    def top(self):
+        if len(self.stk) > 0:
+            return self.stk[-1][0]
+        else:
+            raise Exception('Stack is empty')
+
+    def getMin(self):
+        if len(self.stk) == 0:
+            raise Exception('Stack is empty')
+        return self.stk[-1][1]
+
+
+class MinStack:
+    stk = []
+    min_stk = []
+    
+    def __init__(self):
+        self.stk = []
+        self.min_stk = []
+        
+    def push(self, x):
+        self.stk.append(x)
+        if len(self.min_stk) == 0 or x < self.min_stk[-1]:
+            self.min_stk.append(x) 
+
+    def pop(self):
+        if len(self.stk) == 0:
+            raise Exception('Stack is empty')
+        if self.min_stk[-1] == self.stk[-1]:
+            self.min_stk.pop()
+        self.stk.pop()
+        
+    def top(self):
+        if len(self.stk) == 0:
+            raise Exception('Stack is empty')
+        return self.stk[-1]
+
+    def getMin(self):
+        if len(self.min_stk) == 0:
+            raise Exception('Stack is empty')
+        return self.min_stk[-1]
+        
+
+if __name__ == "__main__":
+    min_stack = MinStack()
+
+    min_stack.push(10)
+    min_stack.push(6)
+    min_stack.push(8)
+    min_stack.push(9)
+    min_stack.push(2)
+    min_stack.push(5)
+
+    assert 5 == min_stack.top()
+    assert 2 == min_stack.getMin()
+    
+    min_stack.pop()
+
+    assert 2 == min_stack.top()
+    assert 2 == min_stack.getMin()
+
+    min_stack.pop()
+
+    assert 9 == min_stack.top()
+    assert 6 == min_stack.getMin()
+
+    min_stack.pop()
+
+    assert 8 == min_stack.top()
+    assert 6 == min_stack.getMin()
+
+    min_stack.pop()
+
+    assert 6 == min_stack.top()
+    assert 6 == min_stack.getMin()
+
+    min_stack.pop()
+
+    assert 10 == min_stack.top()
+    assert 10 == min_stack.getMin()
+
+    min_stack.pop()
+
+    assert -1 == min_stack.top()
+    assert -1 == min_stack.getMin()
+
+
+Sliding Window Maximum
+
+from collections import deque
+
+def slidingMaximum(A, w):
+    dq = deque()
+    result = []
+    
+    if w >= len(A):
+        result.append(max(A))
+        return result
+    
+    for i in range(w):
+        dq.append(A[i])
+        
+    max_n = max(dq)
+    result.append(max_n)
+    
+    for i in range(w, len(A)):
+        last_item = dq.popleft()
+        dq.append(A[i])
+        if A[i] >= max_n:
+            max_n = A[i]
+        elif last_item == max_n:
+            max_n = max(dq)
+        result.append(max_n)
+        
+    return result
+            
+
+if __name__ == "__main__":
+    print(slidingMaximum([10, 9, 8, 7, 6, 5, 5, 5, 6, 7, 8, 9], 3))
+    
+
+Permutation
+
+
+def permute3(i, n):
+	if i == n:
+		tpl = tuple(result)
+		if tpl in s:
+			return
+		s.add(tpl)
+		print(r)
+		return
+	
+	for j in range(n):
+		if taken[j]:
+			continue
+		taken[j] = True
+		result[i] = ara[j]
+		permute3(i+1, n)
+		taken[j] = False
+
+def permute4(l, r):
+	if l == r:
+		print(ara)
+		return
+	
+	for i in range(l, r+1):
+		if ara[i] in ara[l:i]:
+			continue
+		ara[l], ara[i] = ara[i], ara[l]
+		permute4(l+1, r)
+		ara[l], ara[i] = ara[i], ara[l]
+
+def permute1(i, n):
+	if i == n:
+		print(result)
+		return
+	for j in range(n):
+		if taken[j]:
+			continue
+		result[i] = ara[j]
+		taken[j] = True
+		permute1(i+1, n)
+		taken[j] = False
+
+def permute2(i, n):
+	if i == n:
+		print(ara)
+		return
+
+	for j in range(i, n):
+		ara[i], ara[j] = ara[j], ara[i]
+		permute2(i+1, n)
+		ara[i], ara[j] = ara[j], ara[i]
+
+if __name__ == "__main__":
+	ara = [1, 2, 3, 4]
+	n = len(ara)
+	result = [0] * n
+	taken = [False] * n
+	permute2(0, len(ara))
+
+Combinations
+
+def combinations(n, k):
+    def recurse(i, li):
+        if len(li) == k:
+            result.append([x for x in li])
+            return
+
+        if i > n:
+            return
+
+        recurse(i+1, li+[i])
+        recurse(i+1, li)
+
+    result = []
+    recurse(1, [])
+    return result
+
+
+if __name__ == "__main__":
+    n, k = 4, 2
+    print(combinations(n, k))
+
+
+Generate All Subsets
+
+"""
+Generate all subsets of a set using recursion
+"""
+def subsets1(S):
+    if S == []:
+        return [[]]
+
+    result = []
+
+    def recurse(i, n, li):
+        if i == n:
+            result.append([x for x in li])
+            return
+
+        recurse(i+1, n, li+[S[i]])
+        recurse(i+1, n, li)
+                  
+    recurse(0, len(S), [])
+    return result
+
+
+def subsets2(S):
+    if S == []:
+        return [[]]
+
+    result = []
+
+    def recurse(i, n, li):
+        result.append([x for x in li])
+        for j in range(i, n):
+            li.append(S[j])
+            recurse(j+1, n, li)
+            li.pop()
+
+    recurse(0, len(S), [])
+    return result
+
+
+"""
+Generate all subsets of a set using a stack
+"""
+def subsets3(S):
+    if S == []:
+        return [[]]
+
+    result = [[]]
+
+    while len(S):
+        temp_r = []
+        x = S.pop()
+        for r in result:
+            temp_r.append(r + [])
+            temp_r.append(r + [x])
+
+        result = [item for item in temp_r]
+
+    return result
+
+"""
+Generate all subset using loop and bit operation
+"""
+def subsets4(S):
+    result = []
+
+    subset_len = 2 ** len(S)
+
+    for num in range(subset_len):
+        li = []
+        for i in range(len(S)):
+            if num & (1 << i):
+                li.append(S[i])
+        result.append(li)
+
+    return result
+
+
+if __name__ == "__main__":
+    print(subsets1([1, 2, 3]))
+    print(subsets2([1, 2, 3]))
+    print(subsets3([1, 2, 3]))
+    print(subsets4([1, 2, 3]))
+
+
+Combination Sum
+
+# combination sum using duplicates
+def combination_sum1(A, T):
+    result = []
+
+    A.sort()
+
+    def recurse(i, li, S):
+        if S == T:
+            if li not in result:
+                result.append([x for x in li])
+
+        if S > T or i == len(A):
+            return
+
+        recurse(i, li+[A[i]], S+A[i])
+        recurse(i+1, li, S)
+
+    recurse(0, [], 0)
+
+    return result
+
+
+def combination_sum11(A, T):
+    result = []
+
+    A.sort()
+
+    def recurse(i, li, S):
+        if S == T:
+            if li not in result:
+                result.append([x for x in li])
+
+        if S > T or i == n:
+            return
+
+        for j in range(i, n):
+            recurse(j, li+[A[j]], S+A[j])
+
+    n = len(A)
+    recurse(0, [], 0)
+
+    return result
+
+
+# combination sum without using duplicates
+def combination_sum2(A, T):
+    result = []
+
+    A.sort()
+
+    def recurse(i, li, S):
+        if S == T:
+            if li not in result:
+                result.append([x for x in li])
+
+        if S > T or i == len(A):
+            return
+
+        recurse(i+1, li+[A[i]], S+A[i])
+        recurse(i+1, li, S)
+
+    recurse(0, [], 0)
+
+    return result
+
+
+if __name__ == "__main__":
+    A, T = [2, 3, 6, 7], 7
+    result = combination_sum11(A, T)
+    print(result)
+
+
+Palindrome Partition
+
+def partition(S):  
+    def is_palin(s):
+        if len(s) <= 1:
+            return True
+        i, j = 0, len(s) - 1
+        while i < j:
+            if s[i] != s[j]:
+                return 0
+            i += 1
+            j -= 1
+
+        return 1
+
+    def recurse(s, li):
+        print(s, li)
+        if s == "":
+            result.append([x for x in li])
+
+        n = len(s)
+        for i in range(1, n+1):
+            if is_palin(s[:i]):
+                li.append(s[:i])
+                recurse(s[i:], li)
+                li.pop()
+
+    result = []
+    recurse(S, [])
+    return result
+
+
+if __name__ == "__main__":
+    S = "aabcedde"
+    print(partition(S))
+
+### better solution using memoization, dp 
+from collections import defaultdict
+
+def partition(S):  
+    def is_palin(s):
+        if len(s) <= 1:
+            return True
+        i, j = 0, len(s) - 1
+        while i < j:
+            if s[i] != s[j]:
+                return 0
+            i += 1
+            j -= 1
+
+        return 1
+
+    def recurse(s, start, end):
+        if start > end:
+            return []
+        if table[start, end] != []:
+            return table[start, end]
+
+        result = []
+        for i in range(start+1, end):
+            part2 = recurse(s, i, end)
+            if is_palin(s[start:i]):
+                for item in part2:
+                    result.append([s[start:i]]+item)
+
+        if is_palin(s[start:end]):
+            result.append([s[start:end]])
+        
+        table[start, end] = result
+        return result
+    
+    n = len(S)
+    table = defaultdict(list)
+    result = recurse(S, 0, n)
+    for item in table.keys():
+        print(item, table[item])
+    return result
+
+def palindrome_partition(S):
+    def is_palindrome(s):
+        return s == s[::-1]
+
+    n = len(S)
+
+    table = defaultdict(list)
+    
+    table[n-1, n].append([S[n-1]])
+    
+    for i in range(n-2, -1, -1):
+        for j in range(i, n):
+            if is_palindrome(S[i:j+1]):
+                if j + 1 == n:
+                    table[i, n].append([S[i:j+1]])
+                for li in table[j+1, n]:
+                    table[i, n].append([S[i:j+1]]+li)
+    for k in table:
+        print(k, table[k])
+
+
+if __name__ == "__main__":
+    S = "aabcedde"
+    palindrome_partition(S)
+
+
+Generate All Parenthesis
+
+
+
+Letter Phone
+
+Tree Traversal
+
+class TreeNode:
+    def __init__(self, x):
+        self.value = x
+        self.left = None
+        self.right = None
+
+    def add_left_child(self, node):
+        self.left = node
+
+    def add_right_child(self, node):
+        self.right = node
+
+
+def inorder_traversal(node):
+    if node.left:
+        inorder_traversal(node.left)
+    print(node.value)
+    if node.right:
+        inorder_traversal(node.right)
+
+
+def inorder_traversal_using_stack(node):
+    stk = []
+    values = []
+    
+    while True:
+        while node:
+            stk.append(node)
+            node = node.left
+            
+        if len(stk) == 0:
+            break
+
+        node = stk.pop()
+        values.append(node.value)
+        node = node.right
+            
+    return values
+
+def postorder_traversal(node):
+    if node.left:
+        postorder_traversal(node.left)
+    if node.right:
+        postorder_traversal(node.right)
+    print(node.value, end=" ")
+
+
+def postorder_traversal_using_stack(node):
+    stk = []
+    values = []
+    
+    while True:
+        while node:
+            stk.append(node)
+            node = node.left
+            
+        if len(stk) == 0:
+            break
+
+        while len(stk) > 0:
+            node = stk.pop()
+            if node.right:
+                stk.append(node)
+                node = node.right
+                break
+            else:
+                values.append(node.value)
+            
+    return values
+
+
+"""
+     1
+    / \
+   2   3
+ /    / \
+4    5   6
+"""
+
+if __name__ == "__main__":
+    root = TreeNode(1)
+    two, three, four, five, six = [TreeNode(x) for x in range(2, 7)]
+    root.add_left_child(two)
+    root.add_right_child(three)
+    two.add_left_child(four)
+    three.add_left_child(five)
+    three.add_right_child(six)
+
+    postorder_traversal(root)
+    print()
+    li = postorder_traversal_using_stack(root)
+    print(li)
+
+
+
+
+
+Identical Binary Tree
+
+
+
+Balanced Binary Tree
+
+
+
+Symmetric Binary Tree
+
+class TreeNode:
+   def __init__(self, x):
+       self.value = x
+       self.left = None
+       self.right = None
+
+
+def is_symmetric1(root):
+    if root is None:
+        return 1
+        
+    left = []
+    right = []
+    
+    def traverse1(node):
+        if node is None:
+            return
+        left.append(node.value)
+        traverse1(node.left)
+        traverse1(node.right)
+        
+    def traverse2(node):
+        if node is None:
+            return
+        right.append(node.value)
+        traverse2(node.right)
+        traverse2(node.left)
+        
+    traverse1(A.left)
+    traverse2(A.right)
+    
+    return left == right
+        
+
+def is_symmetric2(root):
+    if root is None:
+        return True
+
+    def _is_symmetric(lt, rt):
+        if lt is None and rt is None:
+            return True
+        if lt is None or rt is None:
+            return False
+
+        if lt.value == rt.value:
+            return _is_symmetric(lt.left, rt.right) and _is_symmetric(lt.right, rt.left)
+        
+        return False
+
+
+    return _is_symmetric(root.left, root.right)
+
+
+if __name__ == "__main__":
+    # write code to test the functions
+
+Invert Binary Tree
+
+def invert_tree(node):
+    if node is None:
+        return node
+        
+    node.left, node.right = node.right, node.left
+    invert_tree(node.left)
+    invert_tree(node.right)
+    
+    return node
+
+
+Binary Tree From Inorder And Postorder
+
+def build_tree1(Inorder, Postorder):
+    if len(Inorder) == 0:
+        return None
+        
+    if len(Inorder) == 1:
+        return TreeNode(Inorder[0])
+        
+    root = TreeNode(Postorder[-1])
+    indx = Inorder.index(Postorder[-1])
+    root.left = build_tree1(Inorder[:indx], Postorder[:indx])
+    root.right = build_tree1(Inorder[indx+1:], Postorder[indx:-1])
+        
+    return root
+
+# without recursion
+def build_tree2(Inorder, Postorder):
+    if len(Inorder) == 0:
+        return None
+        
+    if len(Inorder) == 1:
+        return TreeNode(Inorder[0])
+        
+    stk = []
+    root = TreeNode(Postorder.pop())
+    
+    stk.append(root)
+
+    while True:
+        if Inorder[-1] != stk[-1].value:
+            node = TreeNode(Postorder.pop())
+            stk[-1].right = node
+            stk.append(node)
+        else:
+            node = stk.pop()
+            Inorder.pop()
+
+            if len(Inorder) == 0:
+                break
+
+            if stk and Inorder[-1] == stk[-1].value:
+                continue
+            
+            node.left = TreeNode(Postorder.pop())
+
+            stk.append(node.left)
+        
+    return root
+
+
+Valid BST
+
+class node:
+  def __init__(self, data):
+      self.data = data
+      self.left = None
+      self.right = None
+
+
+def find_max(root):
+    max_v = root.data
+    if root.left:
+        left_max = find_max(root.left)
+        if left_max > max_v:
+            max_v = left_max
+    if root.right:
+        right_max = find_max(root.right)
+        if right_max > max_v:
+            max_v = right_max
+    return max_v
+
+
+def check_binary_search_tree(root):
+    if root is None:
+        return True
+        
+    # find the largest number on the left sub-tree and check if it's smaller/equal to the root
+    if root.left:
+        max_value = find_max(root.left)
+        if max_value >= root.data:
+            return False
+    
+    # find the smallest number on the right sub-tree and check if it's larger than the root
+    if root.right:
+        min_value = find_min(root.right)
+        if min_value <= root.data:
+            return False
+    
+    # now do the same for the sub-trees
+    valid_left = check_binary_search_tree(root.left)
+    valid_right = check_binary_search_tree(root.right)
+        
+    return valid_left and valid_right
+
+def check_binary_search_tree_(root):
+    nodes = []
+    
+    def inorder(root):
+        if root is None:
+            return
+        inorder(root.left)    
+        nodes.append(root.data)
+        inorder(root.right)
+            
+    inorder(root)
+    
+    for i in range(len(nodes)-1):
+        if nodes[i] >= nodes[i+1]:
+            return False
+        
+    return True
+
+def check_binary_search_tree(root):
+    
+    def inorder(root):
+        nonlocal last_node
+        
+        if root is None: 
+            return True
+        
+        left_valid = inorder(root.left)    
+        if left_valid is False:
+            return False
+        
+        if root.data <= last_node: 
+            return False
+        
+        last_node = root.data
+        
+        return inorder(root.right)  
+    
+    last_node = -1 #assuming all nodes are non-negative
+    return inorder(root)
+
+
+Kth Smallest in BST
+
+def kthsmallest(root, k):
+    
+    def inorder(node):
+        nonlocal k
+        if not node:
+            return
+        value = inorder(node.left)
+        if value: 
+            return value
+        if k == 1: 
+            return node.value
+        k -= 1
+        return inorder(node.right)
+            
+    return inorder(root)
+
+
+Sorted Array to Balanced BST
+
+def sorted_array_to_BST(A):
+    if len(A) == 0:
+        return None
+        
+    if len(A) == 1:
+        return TreeNode(A[0])
+        
+    l = len(A)
+    mid_indx = l // 2
+    
+    root = TreeNode(A[mid_indx])
+    
+    root.left = sorted_array_to_BST(A[:mid_indx])
+    root.right = sorted_array_to_BST(A[mid_indx+1:])
+        
+    return root
+
+
+BST Iterator
+
+class BSTIterator:
+    stk = []
+    
+    def __init__(self, root):
+        node = root
+        while node:
+            self.stk.append(node)
+            node = node.left
+
+    def hasNext(self):
+        return self.stk != []
+        
+
+    def next(self):
+        next_val = self.stk[-1].val
+        node = self.stk.pop()
+        if node.right:
+            node = node.right
+            while node:
+                self.stk.append(node)
+                node = node.left
+        return next_val
+
+
+Flatten Binary Tree to Linked List
+
+def flatten(root):
+    if root is None:
+        return root
+        
+    li = []
+    
+    def preorder(node):
+        if node is None:
+            return
+        li.append(node)
+        preorder(node.left)
+        preorder(node.right)
+        
+    preorder(root)
+    
+    li.append(None)
+    
+    for i, item in enumerate(li):
+        if item is None:
+            break
+        item.left = None
+        item.right = li[i+1]
+        
+    return li[0]
+
+
+Lowest Common Ancestor
+
+"""
+এখানে লক্ষ করতে হবে যে, traverse() ফাংশনের ভেতরে আমি নোড খুঁজে পাওয়ামত্র return 1 করেছি, 
+তাতে নোডটি পেয়ে গেলে আর নতুন নোড খোঁজা হবে না। 
+"""
+
+def find_lca(root, value1, value2):
+    if not root:
+        return -1
+    
+    def traverse(node, li, v):
+        nonlocal ancestor
+        if not node:
+            return 0
+        if node.value == v:
+            ancestor = [x for x in li]
+            return 1
+        if node.left:
+            return_value = traverse(node.left, li + [node.left.value], v)
+            if return_value:
+                return 1
+        if node.right:
+            return_value = traverse(node.right, li + [node.right.value], v)
+            return return_value
+        return 0
+        
+    ancestor = []
+    a1 = []
+    traverse(root, [root.value], value1)
+    if ancestor == []:
+        return -1
+    a1 = [x for x in ancestor]
+    
+    ancestor = []
+    a2 = []
+    traverse(root, [root.value], value2)
+    if ancestor == []:
+        return -1
+    a2 = [x for x in ancestor]
+    
+    lca = 0
+    for x in zip(a1, a2):
+        if x[0] == x[1]:
+            lca = x[0]
+            
+    return lca
+        
+
+Root to Leaf Paths With Sum
+
+def path_sum(root, sum):
+    result = []
+    
+    if root is None:
+        return result
+    
+    def recurse(node, total, li):
+        nonlocal result
+
+        if total > sum: # if the tree has no negative nodes
+            return
+        
+        if not node.left and not node.right:
+            if total == sum:
+                result.append([x for x in li])
+                
+        if node.left:
+            li.append(node.left.value)
+            recurse(node.left, total+node.left.value, li)
+            li.pop()
+            
+        if node.right:
+            li.append(node.right.value)
+            recurse(node.right, total+node.right.value, li)
+            li.pop()
+            
+    recurse(root, root.value, [root.value])
+
+    return result
+
+
+Running Median
+
+import heapq
+"""
+heapq লাইব্রেরি যেই হিপ ব্যবহার করে, সেটি হচ্ছে মিনহিপ। 
+ম্যাক্সহিপ বানানোর জন্য তাই নোডগুলো -1 দিয়ে গুণ করে দিতে হবে।
+"""
+
+class MedianFinder:
+
+    def __init__(self):
+        self.min_heap = []
+        self.max_heap = []
+        
+
+    def add_num(self, num):
+        if len(self.max_heap) == 0:
+            self.max_heap.append(-num)
+            return
+
+        if len(self.min_heap) == 0:
+            if num < -self.max_heap[0]:
+                max_n = -heapq.heappop(self.max_heap)
+                heapq.heappush(self.max_heap, -num)
+                self.min_heap.append(max_n)
+            else:    
+                self.min_heap.append(num)
+            return
+
+        if num <= self.min_heap[0]:
+            if len(self.max_heap) <= len(self.min_heap):
+                heapq.heappush(self.max_heap, -num)
+            else:
+                if num >= -self.max_heap[0]:
+                    heapq.heappush(self.min_heap, num)
+                else:
+                    max_n = -heapq.heappop(self.max_heap)
+                    heapq.heappush(self.max_heap, -num)
+                    heapq.heappush(self.min_heap, max_n)
+        else:
+            if len(self.max_heap) >= len(self.min_heap):
+                heapq.heappush(self.min_heap, num)
+            else:
+                min_n = heapq.heappop(self.min_heap)
+                heapq.heappush(self.min_heap, num)
+                heapq.heappush(self.max_heap, -min_n)
+
+
+    def find_median(self):
+        if len(self.max_heap) == len(self.min_heap):
+            return (-self.max_heap[0] + self.min_heap[0])/2 
+        if len(self.max_heap) > len(self.min_heap):
+            return -self.max_heap[0] 
+        return self.min_heap[0]
+
+        
+if __name__ == "__main__":
+    mf = MedianFinder()
+
+    for num in [1, 3, 2, 6, 7, 4, 5, 9, 10]:
+        mf.add_num(num)
+        print(mf.find_median())
+
+    for num in [-1, -2, -3, -4, -5]:
+        mf.add_num(num)
+        print(mf.find_median())
+
+
+Magician and Chocolates
+
+from heapq import heapify, heappop, heappush
+
+def max_chololates(N, K, A):
+    h = []
+    for item in A:
+        heappush(h, item * -1)
+
+    max_choc = 0
+
+    for _ in range(K):
+        current_choc = heappop(h)
+        current_choc *= -1
+        max_choc += current_choc
+        current_choc = current_choc // 2
+        heappush(h, current_choc * -1)
+
+    return max_choc
+    
+if __name__ == "__main__":
+    print(max_chololates(2, 3, [6, 5]))
+
+Merge K Sorted Lists
+
+from heapq import heappush, heappop
+
+class ListNode:
+    def __init__(self, x):
+        self.value = x    
+        self.next = None
+
+
+"""
+linked_lists হচ্ছে লিঙ্কড লিস্টের লিস্ট (বা অ্যারে)। এটিতে প্রতিটি লিঙ্কড লিস্টের হেড নোড আছে।
+"""
+def merge_k_lists(linked_lists):
+    h = [] # heap-এ আমরা (নোডের মান, নোড)-এভাবে টাপল রাখব। 
+    for node in linked_lists:
+        if node: # কোনো কোনো লিঙ্কড লিস্ট ফাঁকা থাকতে পারে, সেক্ষেত্রে node হবে None
+            heappush(h, (node.value, node))
+            
+    head = ListNode(0)
+    cur = head
+
+    while len(h):
+        # heappop() একটি টাপল রিটার্ন করবে যার প্রথম উপাদানটি হচ্ছে নোডের মান আর দ্বিতীয়টি হচ্ছে নোড
+        # আমাদের দরকার কেবল নোড, তাই আমরা ইনডেক্স [1] ব্যবহার করছি
+        cur.next = heappop(h)[1] 
+
+        cur = cur.next 
+                       
+        if cur.next: # পরের নোড যদি থাকে, সেটিকে হিপে রাখতে হবে
+            heappush(h, (cur.next.value, cur.next))
+        
+    return head.next
+
+
+

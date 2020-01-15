@@ -20,7 +20,6 @@ def run(li, fnc):
 
 
 if __name__ == "__main__":
-    #li = ["abcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcba", "abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcba", "abcdefghijklmnopqrstuvwxzzyxwvutsrqponmlkjihgfedcba"]
     li = ["abcdefghijklmnopqrstuvwxyzzyxwvutsrqponmlkjihgfedcb"]
     t = timeit(lambda: run(li, is_palindrome1))
     print(t)

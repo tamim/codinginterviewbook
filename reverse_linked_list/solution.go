@@ -62,19 +62,6 @@ func reverseList2(head *listNode) *listNode {
 	return head
 }
 
-/*
-start = node.next
-current = start
-prev = node
-for _ in range(C-B+1):
-	next_item = current.next
-	current.next = prev
-	prev = current
-	current = next_item
-
-start.next = current
-node.next = prev
-*/
 func reverseListMN(head *listNode, m int, n int) *listNode {
 	node := head
 	var prev *listNode
@@ -119,17 +106,6 @@ func main() {
 	node2.next = node3
 	node3.next = node4
 	node4.next = node5
-
-	//printList(head)
-
-	// node := reverseList(head)
-	// fmt.Println("")
-	// printList(node)
-
-	//head = reverseListRecurse(head)
-	//printList(head)
-
-	//head = reverseList2(head)
 
 	head = reverseListMN(head, 2, 4)
 	printList(head)

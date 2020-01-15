@@ -1,4 +1,4 @@
-def maximumGap(A):
+def maximum_gap(A):
     numbers = []
     for i, num in enumerate(A):
         numbers.append((num, i))
@@ -19,10 +19,10 @@ def maximumGap(A):
 
 if __name__ == "__main__":
     A = [3, 5, 4, 2]
-    print(maximumGap(A)) # 2
+    print(maximum_gap(A))
 
     A = [2, 3, 4, 5]
-    print(maximumGap(A)) # 
+    print(maximum_gap(A))
 
     A = [5, 4, 3, 2]
-    print(maximumGap(A)) # 
+    print(maximum_gap(A)) 
