@@ -1,5 +1,7 @@
 # কোডিং ইন্টারভিউ - প্রস্তুতি, সমস্যা ও সমাধান।
 
+![কোডিং ইন্টারভিউ](http://dimik.pub/wp-content/uploads/2020/01/codingInterview.png)
+
 বইটি সম্পর্কে বিস্তারিত জানা যাবে এখানে - (http://dimik.pub/book/475)
 
 বইটি রকমারি থেকে অনলাইনে অর্ডার করা যাবে এই লিঙ্কে গিয়ে - (https://www.rokomari.com/book/194284/coding-interview--prostuti--somosya-o-somadhan)
