@@ -1,6 +1,6 @@
 # কোডিং ইন্টারভিউ - প্রস্তুতি, সমস্যা ও সমাধান।
 
-![কোডিং ইন্টারভিউ](http://dimik.pub/wp-content/uploads/2020/01/codingInterview.png)
+![কোডিং ইন্টারভিউ](https://s3-ap-southeast-1.amazonaws.com/rokomari110/ProductNew20190903/260X372/50e8e4c43_194284.jpg)
 
 বইটি সম্পর্কে বিস্তারিত জানা যাবে এখানে - (http://dimik.pub/book/475)
 
